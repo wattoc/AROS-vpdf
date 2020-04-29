@@ -12,11 +12,11 @@
 #define MUIM_Toolbar_ToggleOutline        (MUIM_Toolbar_Dummy + 4)
 #define MUIM_Toolbar_DragAction           (MUIM_Toolbar_Dummy + 5)
 
-struct MUIP_Toolbar_Zoom {ULONG MethodID; LONG change;};
-struct MUIP_Toolbar_ZoomPopup {ULONG MethodID;};
-struct MUIP_Toolbar_Layout {ULONG MethodID; LONG layout;};
-struct MUIP_Toolbar_DragAction {ULONG MethodID; LONG dragaction;};
-struct MUIP_Toolbar_ToggleOutline {ULONG MethodID; LONG visible; };
+struct MUIP_Toolbar_Zoom {IPTR MethodID; LONG change;};
+struct MUIP_Toolbar_ZoomPopup {IPTR MethodID;};
+struct MUIP_Toolbar_Layout {IPTR MethodID; LONG layout;};
+struct MUIP_Toolbar_DragAction {IPTR MethodID; LONG dragaction;};
+struct MUIP_Toolbar_ToggleOutline {IPTR MethodID; LONG visible; };
 
 #if defined(__AROS__)
 #define ToolbarObject   BOOPSIOBJMACRO_START( getToolbarClass() )

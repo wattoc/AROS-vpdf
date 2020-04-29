@@ -53,9 +53,6 @@
 #include "system/functions.h"
 #include "system/gentexture.h"
 
-#define DEBUG 1
-#include <aros/debug.h>
-
 struct Data
 {
 	void *doc;
@@ -180,19 +177,19 @@ DEFGET
 	switch (msg->opg_AttrID)
 	{
 		case MUIA_DocumentLayout_Zoom:
-			*(ULONG*)msg->opg_Storage = (ULONG)(data->zoom * 65536.0f);
+			*(IPTR*)msg->opg_Storage = (IPTR)(data->zoom * 65536.0f);
 			return TRUE;
 			
 		case MUIA_DocumentLayout_Scaling:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->scaling;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->scaling;
 			return TRUE;
 
 		case MUIA_DocumentLayout_PDFDocument:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->doc;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->doc;
 			return TRUE;
 
 		case MUIA_DocumentLayout_Page:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->page;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->page;
 			return TRUE;
 
 		case MUIA_PageView_NeedRefresh:
@@ -406,7 +403,7 @@ METHOD documentviewEnqueueRender(struct IClass *cl, Object *obj, struct MUIP_Doc
 METHOD singlepagelayoutFindViewForPage(struct IClass *cl, Object *obj, struct MUIP_DocumentLayout_FindViewForPage *msg)
 {
 	GETDATA;
-	return (ULONG)data->views[msg->page - 1];
+	return (IPTR)data->views[msg->page - 1];
 }
 
 METHOD singlepagelayoutIsPageVisible(struct IClass *cl, Object *obj, struct MUIP_DocumentLayout_IsPageVisible *msg)

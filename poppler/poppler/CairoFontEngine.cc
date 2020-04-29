@@ -48,6 +48,11 @@
 #include "Gfx.h"
 #include "Page.h"
 
+#ifdef __AROS__
+#define DEBUG 1
+#include <aros/debug.h>
+#endif
+
 #if HAVE_FCNTL_H && HAVE_SYS_MMAN_H && HAVE_SYS_STAT_H
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -176,25 +181,37 @@ _ft_new_face_uncached (FT_Library lib,
 		       FT_Face *face_out,
 		       cairo_font_face_t **font_face_out)
 {
+  D(kprintf("_ft_new_face_uncached\n"));
   FT_Face face;
   cairo_font_face_t *font_face;
 
   if (font_data == NULL) {
     if (FT_New_Face (lib, filename, 0, &face))
+    {
+      D(kprintf("FT New Face\n"));
       return gFalse;
-  } else {
-    if (FT_New_Memory_Face (lib, (unsigned char *)font_data, font_data_len, 0, &face))
-      return gFalse;
+    }
+    }
+    else
+    {
+      if (FT_New_Memory_Face (lib, (unsigned char *)font_data, font_data_len, 0, &face))
+      {
+       D(kprintf("FT New Memory Face\n"));
+        return gFalse;
+      }
   }
-
   font_face = cairo_ft_font_face_create_for_ft_face (face,
 							  FT_LOAD_NO_HINTING |
 							  FT_LOAD_NO_BITMAP);
+  D(kprintf("Create for FT Face\n"));
+							  
   if (cairo_font_face_set_user_data (font_face,
 				     &_ft_cairo_key,
 				     face,
 				     _ft_done_face_uncached))
   {
+    D(kprintf("failed to set user data\n"));
+  
     _ft_done_face_uncached (face);
     cairo_font_face_destroy (font_face);
     return gFalse;
@@ -202,6 +219,8 @@ _ft_new_face_uncached (FT_Library lib,
 
   *face_out = face;
   *font_face_out = font_face;
+  D(kprintf("worked?\n"));
+
   return gTrue;
 }
 
@@ -280,7 +299,7 @@ _ft_new_face (FT_Library lib,
   struct _ft_face_data tmpl;
 
   tmpl.fd = -1;
-
+D(kprintf("_ft_new_face\n"));
   if (font_data == NULL) {
     /* if we fail to mmap the file, just pass it to FreeType instead */
     tmpl.fd = open (filename, O_RDONLY);
@@ -487,6 +506,7 @@ CairoFreeTypeFont *CairoFreeTypeFont::create(GfxFont *gfxFont, XRef *xref,
     /* Fall through */
   case fontTrueType:
     if (font_data != NULL) {
+        D(kprintf("make TT font\n"));
       ff = FoFiTrueType::make(font_data, font_data_len);
     } else {
       ff = FoFiTrueType::load(fileNameC);
@@ -497,11 +517,18 @@ CairoFreeTypeFont *CairoFreeTypeFont::create(GfxFont *gfxFont, XRef *xref,
     }
     /* This might be set already for the CIDType2 case */
     if (fontType == fontTrueType) {
+      D(kprintf("Get code to GIDMap\n"));
       codeToGID = ((Gfx8BitFont *)gfxFont)->getCodeToGIDMap(ff);
       codeToGIDLen = 256;
     }
+      D(kprintf("Delete FF\n"));
+    
     delete ff;
+          D(kprintf("FT New Face\n"));
+
     if (! _ft_new_face (lib, fileNameC, font_data, font_data_len, &face, &font_face)) {
+          D(kprintf("Failed to create TT face\n"));
+
       error(errSyntaxError, -1, "could not create truetype face\n");
       goto err2;
     }
@@ -548,6 +575,7 @@ CairoFreeTypeFont *CairoFreeTypeFont::create(GfxFont *gfxFont, XRef *xref,
 
  err2:
   /* hmm? */
+      D(kprintf("error doing font things\n"));
   delete fontLoc;
   fprintf (stderr, "some font thing failed\n");
   return NULL;

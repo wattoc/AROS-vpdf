@@ -20,8 +20,8 @@
 
 #define MUIV_VPDFNumberGeneratorEndPos                 -1
 
-struct MUIP_VPDFNumberGeneratorFirst{ULONG MethodID; LONG reverse;};
-struct MUIP_VPDFNumberGeneratorNext{ULONG MethodID;};
+struct MUIP_VPDFNumberGeneratorFirst{IPTR MethodID; LONG reverse;};
+struct MUIP_VPDFNumberGeneratorNext{IPTR MethodID;};
 
 #if defined(__AROS__)
 #define VPDFNumberGenerator BOOPSIOBJMACRO_START(getVPDFNumberGeneratorClass())

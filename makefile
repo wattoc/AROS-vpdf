@@ -1,8 +1,8 @@
 # "show" Makefile
 
-CXX=i386-aros-g++
-CC=i386-aros-gcc
-LD=i386-aros-gcc-4.6.4
+CXX=ppc-morphos-g++-4
+CC=ppc-morphos-gcc
+LD=ppc-morphos-gcc-4
 SHELL = /bin/sh
 
 JPEGSHARED = ../../libs/jpeg6b/lib/
@@ -40,7 +40,7 @@ endif
 #FONTCONFIGLIB = -lfontconfig
 FONTCONFIGINC = -I../../libs/fontconfig/MorphOS/include
 
-CPPFLAGS = -g -O2 -O2 -fno-strict-aliasing -Wno-write-strings -Wall -Isystem -Lsystem -Imcc -Lmcc -I. -Llib -Ipoppler/poppler/ -Ipoppler -Iaros -Iaros/include/ -Laros -DMUI_OBSOLETE -I/home/craig/aros-linux-i386-dbg/bin/linux-i386/AROS/Developer/include
+CPPFLAGS = -g -O2 -Wno-write-strings -Wall -mfused-madd -mmultiple -mcpu=750 -noixemul -fno-inline-functions -Isystem -Lsystem -Imcc -Lmcc -I. -Llib -Ipoppler/poppler/ -Ipoppler
 #CPPFLAGS = -D__MORPHOS_SHAREDLIBS -O2 -Wall -mfused-madd -mmultiple -mcpu=750 -noixemul -fno-inline-functions -Isystem -Lsystem -Ifx -Lfx -Imcc -Lmcc -I. -Llib -Llibpng -Llibjpeg -Lexif -Llibz -Lalbum
 
 ifeq ($(INMORPHOS),y)
@@ -55,29 +55,29 @@ endif
 OBJS = locale.o  vpdf.o poppler_io.o poppler.o clipboard.o window.o application.o logger.o settings.o fontcache.o arrowstring_class.o  pagenumberclass.o printer.o  poppler_printer.o printer_image.o
 
 #selection between shared libs and staticly linnked
-CAIRO_LIBS = ${FONTCONFIGLIB} -lpixman -lcairo
+CAIRO_LIBS = ${FONTCONFIGLIB} -lcairo
 POPPLER_LIBS = -lpoppler -lgoo -lfofi -lpoppler-splash
 #LIBS_SHARED = -L../poppler-0.11.1/poppler/.libs/ -lpoppler-cairo -lfontconfig -lcairo -lpoppler -lfontconfig -lfreetype-2.3.8 -lexpat -L../showgirls/system -L../showgirls/mcc -L../lairecvs/morphos/morphoswb/apps/showgirls/system -lsystem -lmuiclasses -lsystem -lmoto -L. -ljpeg_shared -lpng_shared -I../showgirls  -ldebug -lsyscall -ljpeg_shared -lpng_shared -liconv
 #LIBS_SHARED = -L../poppler-0.11.1/poppler/.libs/ $(CAIRO_LIBS) -lpoppler -lfontconfig -lfreetypeauto -lexpat -L../showgirls/system -L../showgirls/mcc -L../lairecvs/morphos/morphoswb/apps/showgirls/system -lsystem -lmuiclasses -lsystem -lmoto -L. -ljpeg_shared -lpng_shared -I../showgirls  -ldebug -lsyscall -ljpeg_shared -lpng_shared -liconv
-LIBS_SHARED = -Lpoppler/poppler/ -Lpoppler/fofi/ -Lpoppler/splash -Lpoppler/goo $(CAIRO_LIBS) -L../showgirls/system -L../showgirls/mcc -L/home/craig/aros-linux-i386-dbg/bin/linux-i386/AROS/Developer/lib -L. -I../showgirls -lmuiclasses -lsystem -lfontconfig -lfreetype2 -ldebug -lpng
-LIBS=$(LIBS_SHARED) $(POPPLER_LIBS) $(CAIRO_LIBS) -lsystem -lfontconfig -lfreetype2 -lxslt -lxml2 -lexpat -ljpeg -lstdc++ -lm -ldebug -lpthread -lz -lrexxsyslib
+LIBS_SHARED = -Lpoppler/poppler/ -Lpoppler/fofi/ -Lpoppler/splash -Lpoppler/goo $(CAIRO_LIBS) -L../showgirls/system -L../showgirls/mcc -L../../libs/fontconfig/MorphOS/lib/libnix -L../../libs/cairo/cairo-src/MorphOS/lib/libnix -L../../libs/freetype/library/lib -L. -I../showgirls -lmuiclasses -lsystem -ldebug -lsyscall
+LIBS=$(LIBS_SHARED) $(POPPLER_LIBS) $(CAIRO_LIBS) -lsystem -lfreetypeauto -ljpeg_shared -lstdc++ -lm -ldebug -lsyscall
 
 .PHONY: all install install-iso clean
 
-all: libs version.h  $(OBJS)
+all: catalogs libs version.h  $(OBJS)
 	make -C poppler
 	make -C mcc
 	$(LD) $(CPPFLAGS) -o vpdf.db $(OBJS) $(LIBS)
-	i386-aros-strip vpdf.db --remove-section=.comment --strip-unneeded -o vpdf
+	ppc-morphos-strip vpdf.db --remove-section=.comment --strip-unneeded -o vpdf
 	chmod u+x vpdf
 
 fontcache: fontcache.c
-	i386-aros-gcc-4.6.4 $(CPPFLAGS) -DSTANDALONE -c fontcache.c
-	i386-aros-gcc-4.6.4 $(CPPFLAGS) -o fontcache fontcache.o $(LIBS_SHARED) -lfreetypeauto
+	ppc-morphos-gcc-4.4.4 $(CPPFLAGS) -DSTANDALONE -c fontcache.c
+	ppc-morphos-gcc-4.4.4 $(CPPFLAGS) -o fontcache fontcache.o $(LIBS_SHARED) -lfreetypeauto
 
 test: test.o
 	path
-	i386-aros-gcc-4.6.4 $(CPPFLAGS) -o test.exe test.o $(LIBS)
+	ppc-morphos-gcc-4.4.4 $(CPPFLAGS) -o test.exe test.o $(LIBS)
 
 libs:
 ifeq ($(INMORPHOS),y)
@@ -88,13 +88,13 @@ ifeq ($(INMORPHOS),y)
 endif
 
 ifeq ($(INMORPHOS),n)
-LIBSYSTEMOBJS = $(addprefix system/,directory.o dlist.o file.o functions.o init.o memory.o timer.o)
+LIBSYSTEMOBJS = $(addprefix system/,altivec.o directory.o dlist.o file.o functions.o init.o memory.o timer.o)
 
-system/libsystem.a: CC=i386-aros-gcc
-system/libsystem.a: CPPFLAGS=-O2 -Wall -I. -Iinclude
+system/libsystem.a: CC=ppc-morphos-gcc
+system/libsystem.a: CPPFLAGS=-O2 -Wall -fvec -I. -Iinclude
 system/libsystem.a: $(LIBSYSTEMOBJS)
 	rm -f $@
-	i386-aros-ar rcs $@ $^
+	ppc-morphos-ar rcs $@ $^
 
 all: system/libsystem.a
 endif
@@ -120,7 +120,7 @@ version.h: FORCE
 clean:
 	make -C mcc clean
 	make -C poppler clean
-	rm -f *.o VPDF VPDF.db
+	rm -f *.o VPDF VPDF.db VPDF_strings.h
 
 install-iso: all
 	mkdir -p $(ISOPATH)Applications/VPDF

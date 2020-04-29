@@ -150,11 +150,11 @@ DEFGET
 	switch (msg->opg_AttrID)
 	{
 		case MUIA_DocumentLayout_Zoom:
-			*(ULONG*)msg->opg_Storage = xget(data->layoutgroup, msg->opg_AttrID);
+			*(IPTR*)msg->opg_Storage = xget(data->layoutgroup, msg->opg_AttrID);
 			return TRUE;
 
 		case MUIA_DocumentView_PDFDocument:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->doc;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->doc;
 			return TRUE;
 
 		case MUIA_OutlineView_Page:

@@ -1292,7 +1292,6 @@ const FcCharMap *IntFcFreeTypeGetPrivateMap(FT_Encoding encoding)
     return 0;
 }
 
-
 /* A shift-JIS will have many high bits turned on */
 static FcBool FcLooksLikeSJIS (FcChar8 *string, int len)
 {
@@ -1965,17 +1964,16 @@ struct fontpattern *fcQueryFace(const FT_Face face, char *fname, int id)
 
     return pat;
 
-#if 0
 bail2:
+
+#if 0
     FcCharSetDestroy (cs);
 #endif
-
 bail1:
 
     fcPatternDestroy (pat);
-#if 0
 bail0:
-#endif
+
     return NULL;
 }
 
@@ -1994,7 +1992,7 @@ static struct fontpattern *fcQueryFont(char *fname, int id, int *count)
 	
 	if (FT_New_Face(ftLibrary, fname, id, &face))
 	{
-		//D(kprintf("failed to open tt font:%s, %d\n", fname, id));
+		D(kprintf("failed to open tt font:%s, %d\n", fname, id));
 		goto bail;
 	}
     *count = face->num_faces;
@@ -2084,7 +2082,7 @@ struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat, in
 	struct fontpattern *cpat;
 	struct fontpattern *bestmatch = NULL;
 	int bestmatchweight = 0;
-		
+	
 	/* Find best match by calcularing weighted compatibility value */
 		
 	ITERATELIST(cpat, &cache->entries)
@@ -2095,7 +2093,6 @@ struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat, in
 		
 		ITERATELIST(pe, &pat->entries)	/* pe - for each entry in criteria pattern. assume that caller is not stupid and doesn't pass elements with 0-weight */
 		{
-		
 			ITERATELIST(cpe, &cpat->entries)	/* cpe - for each entry in pattern in cache */
 			{
 				int match = FALSE;
@@ -2106,17 +2103,16 @@ struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat, in
 
 					if (cpe->element == EFC_FILE)
 					{
-
 						char *filepart = FilePart(cpe->value.s);
 						if (filepart != NULL) /* paranoid? */
 						{
-							if (0 == stricmp(filepart, pe->value.s)) {
+							if (0 == stricmp(filepart, pe->value.s))
 								match = TRUE;
-							}
 						}
 					}
 					else /* then generic attributes */
 					{
+											
 						if (cpe->type == FC_ETYPE_STRING)
 						{
 							/* TODO: make all strings uppercase and kill blanks */
@@ -2139,7 +2135,6 @@ struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat, in
 				{
 					if (pe->excluding) /* if the match was found and the criteria is excluding we lower the score */
 					{
-
 						/* if any attribute did match earlier then we don't go below 1 as it still matches better than font with zero matches */
 						weight -= fcelementpriority[cpe->element];	
 					}
@@ -2164,7 +2159,6 @@ struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat, in
 			bestmatchweight = weight;
 			if (matchingcriteria != NULL)
 				memcpy(matchingcriteria, cmatchingcriteria, sizeof(cmatchingcriteria));
-
 		}
 	}
 	
@@ -2175,8 +2169,7 @@ struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat, in
 		if (FcDebug () & FC_DBG_SCANV)
 			kprintf("*****ERROR: No match for pattern\n");
 	}
-	//D(kprintf("Returning best match\n"));
-
+	
 	return bestmatch;	
 }
 
@@ -2203,7 +2196,7 @@ int fcSave(struct fontcache *fontcache, char *fname)
 	if (f == NULL)
 		return FALSE;
 	
-	//D(kprintf("writting fontcache to %s\n", fname));
+	D(kprintf("writting fontcache to %s\n", fname));
 		
 	/* write some header + version number */
 	
@@ -2298,7 +2291,7 @@ struct fontcache *fcLoad(char *fname)
 		return NULL;
 	}
 	
-	//D(kprintf("loading font cache from %s\n", fname));
+	D(kprintf("loading font cache from %s\n", fname));
 	
 	for(;;)
 	{

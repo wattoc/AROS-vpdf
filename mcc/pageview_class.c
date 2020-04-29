@@ -82,8 +82,8 @@ struct Data
 	struct PageViewRegion region;
 	int mx, my;
 	int moveregion;
-	long offsetx, offsety;
-	long topedge;
+	LONG offsetx, offsety;
+	LONG topedge;
 	int markmx, markmy;
 	int pointertype;
 	int mousedown;
@@ -95,8 +95,8 @@ struct Data
 	void *doc;
 	int page;
 	int ready;
-	long prevwidth, prevheight;
-	long mediawidth, mediaheight;
+	LONG prevwidth, prevheight;
+	LONG mediawidth, mediaheight;
 	int invalid;
 	int flushmethodid;
 	int information;
@@ -231,21 +231,27 @@ DEFNEW
 				case MUIA_PageView_PDFDocument:
 					data->doc = (void*)tag->ti_Data;
 					break;
+
 				case MUIA_PageView_Page:
 					data->page = tag->ti_Data;
 					break;
+
 				case MUIA_PageView_MediaWidth:
 					data->mediawidth = tag->ti_Data;
 					break;
+
 				case MUIA_PageView_MediaHeight:
 					data->mediaheight = tag->ti_Data;
 					break;
+
 				case MUIA_PageView_Information:
 					data->information = tag->ti_Data;
 					break;
+
 				case MUIA_PageView_IsPreview:
 					data->ispreview= tag->ti_Data;
 					break;
+
 				case MUIA_PageView_TopEdge:
 					data->topedge= tag->ti_Data;
 					break;
@@ -715,9 +721,11 @@ DEFSET
 		case MUIA_PageView_PDFReady:
 			data->ready = tag->ti_Data;
 			break;
+
 		case MUIA_PageView_TopEdge:
 			data->topedge = tag->ti_Data;
 			break;
+
 		case MUIA_PageView_Quiet:
 			data->quiet = tag->ti_Data;
 			break;
@@ -838,37 +846,39 @@ DEFGET
 	switch (msg->opg_AttrID)
 	{
 		case MUIA_PageView_Width:
-			*(msg->opg_Storage) = (ULONG)(data->image ? data->image->width : 0);
+			*(msg->opg_Storage) = (IPTR)(data->image ? data->image->width : 0);
 			return TRUE;
 
 		case MUIA_PageView_Height:
-			*(msg->opg_Storage) = (ULONG)(data->image ? data->image->height : 0);
+			*(msg->opg_Storage) = (IPTR)(data->image ? data->image->height : 0);
 			return TRUE;
 
 		case MUIA_PageView_LayoutWidth:
-			*(msg->opg_Storage) = (ULONG)(data->layoutwidth);
+			*(msg->opg_Storage) = (IPTR)(data->layoutwidth);
 			return TRUE;
 
 		case MUIA_PageView_LayoutHeight:
-			*(msg->opg_Storage) = (ULONG)(data->layoutheight);
+			*(msg->opg_Storage) = (IPTR)(data->layoutheight);
 			return TRUE;
 
 		case MUIA_PageView_Region:
-			*(msg->opg_Storage) = (ULONG)&data->region;
+			*(msg->opg_Storage) = (IPTR)&data->region;
 			return TRUE;
+
 		case MUIA_PageView_TopEdge:
-			*(msg->opg_Storage) = (ULONG)data->topedge;
+			*(msg->opg_Storage) = (IPTR)data->topedge;
 			return TRUE;
+
 		case MUIA_PageView_Page:
-			*(msg->opg_Storage) = (ULONG)data->page;
+			*(msg->opg_Storage) = (IPTR)data->page;
 			return TRUE;
 
 		case MUIA_PageView_MediaWidth:
-			*(msg->opg_Storage) = (ULONG)data->mediawidth;
+			*(msg->opg_Storage) = (IPTR)data->mediawidth;
 			return TRUE;
 
 		case MUIA_PageView_MediaHeight:
-			*(msg->opg_Storage) = (ULONG)data->mediaheight;
+			*(msg->opg_Storage) = (IPTR)data->mediaheight;
 			return TRUE;
 
 		case MUIA_PageView_RedirectPage:

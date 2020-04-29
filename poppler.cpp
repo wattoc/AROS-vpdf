@@ -2,6 +2,7 @@
  * Wrap poppler document class functions into c functions.
  */
 
+
 //#define USE_SPLASH
 
 #define AROS_ALMOST_COMPATIBLE
@@ -57,6 +58,8 @@
 #include "poppler.h"
 #include "poppler_io.h"
 #include "poppler_device.h"
+
+#define DEBUG 1
 
 #if defined(__AROS__)
 #include <stdint.h>
@@ -359,11 +362,11 @@ void *pdfNew(const char *fname)
 		}
 
 		CachedFile *cachedFile = new CachedFile(new StdCacheLoader(), new GooString(fname));
-		//D(kprintf("pdf file opened...\n"));
+		D(kprintf("pdf file opened...\n"));
 		ctx->stream = new CachedFileStream(cachedFile, 0, gTrue, cachedFile->getLength(), &obj);
-		//D(kprintf("pdf stream created..\n"));
+		D(kprintf("pdf stream created..\n"));
 		ctx->doc = new PDFDoc(ctx->stream, NULL, NULL);
-		//D(kprintf("document opened...\n"));
+		D(kprintf("document opened...\n"));
 
 		if(ctx->doc == NULL || !ctx->doc->isOk() || ctx->doc->getNumPages() == 0)
 		{
@@ -388,8 +391,8 @@ void *pdfNew(const char *fname)
 		ctx->surface = NULL;
 		ctx->dev->startDoc(ctx->doc);
 #endif
-		//D(kprintf("media_box:%f,%f\n", ctx->doc->getPageMediaWidth(1), ctx->doc->getPageMediaHeight(1)));
-		//D(kprintf("media_box:%f, %f\n", pdfGetPageMediaWidth(ctx, 1), pdfGetPageMediaHeight(ctx, 1)));
+		D(kprintf("media_box:%f,%f\n", ctx->doc->getPageMediaWidth(1), ctx->doc->getPageMediaHeight(1)));
+		D(kprintf("media_box:%f, %f\n", pdfGetPageMediaWidth(ctx, 1), pdfGetPageMediaHeight(ctx, 1)));
 
 		NEWLIST(&ctx->search.searchresultlist);
 
@@ -522,7 +525,7 @@ static GBool abortcheckcbk_wrapper(void *data)
 	if (abortctx->userfunction != NULL)
 		return (GBool)abortctx->userfunction(abortctx->userdata);
 
-	//D(printf("abort check...\n"));
+	D(printf("abort check...\n"));
 	return 0;
 }
 
@@ -595,7 +598,7 @@ int pdfDisplayPageSlice(void *_ctx, int page, double scale, int rotate,
 
 	//Delay(50);
 	//cairo_save(ctx->cairo);
-	//printf("render:%d, %d, crop:%d, %d\n", width, height, cropwidth, cropheight);
+	D(kprintf("render:%d, %d, crop:%d, %d\n", width, height, cropwidth, cropheight));
 	try
 	{
 		struct abortcallbackcontext abortctx;

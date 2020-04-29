@@ -76,9 +76,6 @@
 #include "ICSupport.h"
 #endif
 
-#include <aros/debug.h>
-#define DEBUG 1
-
 //------------------------------------------------------------------------
 // parameters
 //------------------------------------------------------------------------
@@ -3539,7 +3536,6 @@ GBool TextPage::findText(Unicode *s, int len,
   double xMin0, yMin0, xMax0, yMax0;
   double xMin1, yMin1, xMax1, yMax1;
   GBool found;
-  D(kprintf("Called findText %s\n",s));
 
   //~ needs to handle right-to-left text
 
@@ -3556,8 +3552,6 @@ GBool TextPage::findText(Unicode *s, int len,
   } else {
     s2 = unicodeNormalizeNFKC(s, len, &len, NULL);
   }
-
-	D(kprintf("Unicoded %s\n",s2));
 
   txt = NULL;
   txtSize = 0;
@@ -3638,7 +3632,6 @@ GBool TextPage::findText(Unicode *s, int len,
       } else {
 	txt = line->normalized;
       }
-	D(kprintf("Text line %s\n",txt));
 
       // search each position in this line
       j = backward ? m - len : 0;
@@ -3700,7 +3693,6 @@ GBool TextPage::findText(Unicode *s, int len,
                   yMin0 = yMin1;
                   yMax0 = yMax1;
                   found = gTrue;
-                  D(kprintf("text search found\n"));
                 }
               }
             } else {
@@ -3715,7 +3707,6 @@ GBool TextPage::findText(Unicode *s, int len,
                   yMin0 = yMin1;
                   yMax0 = yMax1;
                   found = gTrue;
-                  D(kprintf("text search found\n"));
                 }
               }
             }

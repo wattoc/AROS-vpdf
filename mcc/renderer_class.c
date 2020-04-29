@@ -60,7 +60,7 @@ struct RenderingQueueNode
 {
 	struct Node n;
 	int id;
-	long page;
+	LONG page;
 	int rerender;
 	Object *grpLayout;
 	void *userdata;
@@ -70,7 +70,7 @@ struct Data
 {
 	int currentid;
 	Object *proc;
-	long pendingpage;
+	LONG pendingpage;
 	int aborted;
 	struct List renderingqueue;
 	struct SignalSemaphore listsema;
@@ -204,7 +204,7 @@ DEFMMETHOD(Process_Process)
 		if (page > 0)
 		{
 			void *pdfDocument = (void*)xget(rqn->grpLayout, MUIA_DocumentLayout_PDFDocument);
-			//D(kprintf("Got PDF doc %d\n", pdfDocument));
+			D(kprintf("Got PDF doc %d\n", pdfDocument));
 			float scale = 1.0f;
 			float mediaheight, mediawidth;
 			int bmwidth, bmheight;
@@ -215,27 +215,25 @@ DEFMMETHOD(Process_Process)
 			/* find pageview object which should receive new image */
 
 			pageview = (Object*)DoMethod(rqn->grpLayout, MUIM_DocumentLayout_FindViewForPage, page);
-			//D(kprintf("Got pageview %d\n", pageview));
+			D(kprintf("Got pageview %d\n", pageview));
 
 			/* calculate scale based on page height dimmensions (scale page to fit) */
 			mediaheight = pdfGetPageMediaHeight(pdfDocument, page);
 			mediawidth = pdfGetPageMediaWidth(pdfDocument, page);
 			
 			rotation = xget(pageview, MUIA_PageView_Rotation);
-			//D(kprintf("Mediaheight %f, width %f, rotation %d\n", mediaheight, mediawidth, rotation));
+			D(kprintf("Mediaheight %f, width %f, rotation %d\n", mediaheight, mediawidth, rotation));
 
 			
 			applyrotation(&mediawidth, &mediaheight, rotation);
-			//D(kprintf("Applied rotation\n"));
+			D(kprintf("Applied rotation\n"));
 			rotation *= 90;  // (yeah, we abuse the constants here...)
 			
 			scale = xget(pageview, MUIA_PageView_LayoutHeight) / mediaheight;
 			scale = MIN(scale, xget(pageview, MUIA_PageView_LayoutWidth) / mediawidth);
-			//D(kprintf("Set scale %f\n",scale));
-			//scale = 1.0f;
+			
 			rc = pdfDisplayPageSlice(pdfDocument, page, scale, rotation, 0, gFalse, gFalse, -1, -1, -1, -1, documentviewCheckRenderAbort, rqn->userdata);
-			D(printf("dimmensions:%d,%d. media height:%f,%f. scale:%f. page:%d\n", pdfGetBitmapWidth(pdfDocument), pdfGetBitmapHeight(pdfDocument), pdfGetPageMediaWidth(pdfDocument, page), pdfGetPageMediaHeight(pdfDocument, page), scale, page));
-
+			D(kprintf("Slice displayed\n"));
 			/* pass rendered bitmap to the page view */
 
 			DoMethod(_app(pageview), MUIM_Application_KillPushMethod, pageview, 0, 0);
@@ -243,6 +241,7 @@ DEFMMETHOD(Process_Process)
 			{
 				struct pdfBitmap bm;
 				pdfGetBitmap(pdfDocument, &bm);
+				D(kprintf("dimensions:%d,%d. media height:%f,%f. scale:%f. page:%d\n", pdfGetBitmapWidth(pdfDocument), pdfGetBitmapHeight(pdfDocument), pdfGetPageMediaWidth(pdfDocument, page), pdfGetPageMediaHeight(pdfDocument, page), scale, page));
 				
 				/* setting these attributes must guarantee that nothing will be redrawn! simplifies memory management */
 				set(pageview, MUIA_PageView_PDFBitmap, NULL);
@@ -334,7 +333,7 @@ DEFMMETHOD(Renderer_Enqueue)
 
 	ObtainSemaphore(&data->listsema);
 
-	D(kprintf("enqueue2:%d\n", msg->pageIndex));
+	D(kprintf("enqueue2 page: %d, layoutgrp: %p\n", msg->pageIndex,  msg->grpLayout));
 
 	ITERATELIST(rqn, &data->renderingqueue)
 	{
@@ -342,6 +341,7 @@ DEFMMETHOD(Renderer_Enqueue)
 		{
 			rqn->rerender = TRUE;
 			ReleaseSemaphore(&data->listsema);
+			D(kprintf("Existing request\n"));
 			return 0;
 		}
 	}

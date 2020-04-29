@@ -19,8 +19,8 @@
 #define	MUIM_DocumentLayout_IsPageVisible   (MUIM_DocumentLayout_Dummy + 2)
 #define MUIM_DocumentLayout_Refresh         (MUIM_DocumentLayout_Dummy + 3)
 
-struct MUIP_DocumentLayout_FindViewForPage {ULONG MethodID; int page;};
-struct MUIP_DocumentLayout_IsPageVisible {ULONG MethodID; int page;};
+struct MUIP_DocumentLayout_FindViewForPage {IPTR MethodID; int page;};
+struct MUIP_DocumentLayout_IsPageVisible {IPTR MethodID; int page;};
 
 /* classspecific methods and attributes */
 
@@ -29,10 +29,10 @@ struct MUIP_DocumentLayout_IsPageVisible {ULONG MethodID; int page;};
 #define	MUIM_ContinuousLayout_ClippedPageOffset (MUIM_DocumentLayout_Dummy + 13)
 #define	MUIM_SinglePageLayout_Relayout (MUIM_DocumentLayout_Dummy + 11)
 
-struct MUIP_ContinuousLayout_Relayout {ULONG MethodID;};
-struct MUIP_ContinuousLayout_SetupPage{ULONG MethodID;};
-struct MUIP_ContinuousLayout_ClippedPageOffset{ULONG MethodID; int page;};
-struct MUIP_SinglePageLayout_Relayout {ULONG MethodID;};
+struct MUIP_ContinuousLayout_Relayout {IPTR MethodID;};
+struct MUIP_ContinuousLayout_SetupPage{IPTR MethodID;};
+struct MUIP_ContinuousLayout_ClippedPageOffset{IPTR MethodID; int page;};
+struct MUIP_SinglePageLayout_Relayout {IPTR MethodID;};
 
 #define MUIV_DocumentLayout_Scaling_FitPage 0
 #define MUIV_DocumentLayout_Scaling_FitWidth 1

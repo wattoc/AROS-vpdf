@@ -43,6 +43,11 @@
 #include "FoFiTrueType.h"
 #include "poppler/Error.h"
 
+#ifdef __AROS__
+#define DEBUG 1
+#include <aros/debug.h>
+#endif
+
 //
 // Terminology
 // -----------
@@ -270,7 +275,9 @@ FoFiTrueType *FoFiTrueType::make(char *fileA, int lenA, int faceIndexA) {
   FoFiTrueType *ff;
 
   ff = new FoFiTrueType(fileA, lenA, gFalse, faceIndexA);
+  D(kprintf("Defined new FofiTT\n"));
   if (!ff->parsedOk) {
+  D(kprintf("Did not parse OK\n"));
     delete ff;
     return NULL;
   }
@@ -305,8 +312,11 @@ FoFiTrueType::FoFiTrueType(char *fileA, int lenA, GBool freeFileDataA, int faceI
   faceIndex = faceIndexA;
   gsubFeatureTable = 0;
   gsubLookupList = 0;
+  D(kprintf("Before parse FofiTT\n"));
 
   parse();
+    D(kprintf("Parsed FofiTT\n"));
+
 }
 
 FoFiTrueType::~FoFiTrueType() {

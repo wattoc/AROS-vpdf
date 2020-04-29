@@ -66,7 +66,7 @@ struct Data
 	struct MUI_EventHandlerNode eh;
 	int clicky;
 	int clickx;
-	long page;
+	LONG page;
 	int columns;
 	int scaling;
 	float zoom;
@@ -107,7 +107,7 @@ DEFNEW
 
 			data->views = malloc(sizeof(Object*) * pdfGetPagesNum(data->doc));
 			#warning TODO: handle failure
-			long top=0;
+			LONG top=0;
 			for(i=0; i<pdfGetPagesNum(data->doc); i++)
 			{
 				float mediawidth = pdfGetPageMediaWidth(data->doc, i + 1);
@@ -168,19 +168,19 @@ DEFGET
 	switch (msg->opg_AttrID)
 	{
 		case MUIA_DocumentLayout_Zoom:
-			*(ULONG*)msg->opg_Storage = (ULONG)(data->zoom * 65536.0f);
+			*(IPTR*)msg->opg_Storage = (IPTR)(data->zoom * 65536.0f);
 			return TRUE;
 			
 		case MUIA_DocumentLayout_Scaling:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->scaling;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->scaling;
 			return TRUE;
 
 		case MUIA_DocumentLayout_PDFDocument:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->doc;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->doc;
 			return TRUE;
 
 		case MUIA_DocumentLayout_Page:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->page;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->page;
 			return TRUE;
 
 		case MUIA_PageView_NeedRefresh:
@@ -362,7 +362,7 @@ METHOD documentviewEnqueueRender(struct IClass *cl, Object *obj, struct MUIP_Doc
 METHOD continuouslayoutFindViewForPage(struct IClass *cl, Object *obj, struct MUIP_DocumentLayout_FindViewForPage *msg)
 {
 	GETDATA;
-	return (ULONG)data->views[msg->page - 1];
+	return (IPTR)data->views[msg->page - 1];
 }
 
 METHOD continuouslayoutIsPageVisible(struct IClass *cl, Object *obj, struct MUIP_DocumentLayout_IsPageVisible *msg)
@@ -372,18 +372,18 @@ GETDATA;
 
 	//work around overflow in TopEdge... why is this happening, it's meant to be a long?
 
-	long top = (long)xget(pageview, MUIA_TopEdge) - (long)_addtop(obj);
-	long height = (long)xget(pageview, MUIA_Height);
+	LONG top = (LONG)xget(pageview, MUIA_TopEdge) - (LONG)_addtop(obj);
+	LONG height = (LONG)xget(pageview, MUIA_Height);
 
-	long topedge = ((long)xget(pageview, MUIA_PageView_TopEdge)*(float)((float)height / xget(obj, MUIA_PageView_MediaHeight) )) -(long)xget(obj, MUIA_Virtgroup_Top);
+	LONG topedge = ((LONG)xget(pageview, MUIA_PageView_TopEdge)*(float)((float)height / xget(obj, MUIA_PageView_MediaHeight) )) -(LONG)xget(obj, MUIA_Virtgroup_Top);
 
 	D(kprintf("topedge: %ld, virttop %ld, mediaheight: %ld, height: %ld\n",topedge,(long)xget(obj, MUIA_Virtgroup_Top), (long)xget(obj, MUIA_PageView_MediaHeight), height));
 	/* check constraints for object and group */
 	top = topedge; //- (long)_addtop(obj);
-	long nTop = top - _top(obj);
-	long nBottom = nTop + height;
-	long gBottom = _height(obj) + 5;    /* 5 is a margin */
-	long gTop = -5;
+	LONG nTop = top - _top(obj);
+	LONG nBottom = nTop + height;
+	LONG gBottom = _height(obj) + 5;    /* 5 is a margin */
+	LONG gTop = -5;
 
 	
 	
@@ -411,16 +411,16 @@ METHOD continuouslayoutClippedPageOffset(struct IClass *cl, Object *obj, struct 
 GETDATA;
 	Object *pageview = data->views[msg->page - 1];
 
-	long top = (long)xget(pageview, MUIA_TopEdge) - (long)_addtop(obj);
-	long height = (long)xget(pageview, MUIA_Height);
+	LONG top = (LONG)xget(pageview, MUIA_TopEdge) - (LONG)_addtop(obj);
+	LONG height = (LONG)xget(pageview, MUIA_Height);
 	/* check constraints for object and group */
-long topedge = ((long)xget(pageview, MUIA_PageView_TopEdge)*(float)((float)height / xget(obj, MUIA_PageView_MediaHeight) )) -(long)xget(obj, MUIA_Virtgroup_Top);
+	LONG topedge = ((LONG)xget(pageview, MUIA_PageView_TopEdge)*(float)((float)height / xget(obj, MUIA_PageView_MediaHeight) )) -(LONG)xget(obj, MUIA_Virtgroup_Top);
 
-	long nTop = topedge - _top(obj);
-	long nBottom = nTop + height;
-	long gBottom = _height(obj) + 5;    /* 5 is a margin */
-	long gTop = -5;
-	long oldnTop = nTop;
+	LONG nTop = topedge - _top(obj);
+	LONG nBottom = nTop + height;
+	LONG gBottom = _height(obj) + 5;    /* 5 is a margin */
+	LONG gTop = -5;
+	LONG oldnTop = nTop;
 
 	//printf("page %d borders:%d %d, borders:%d,%d\n", msg->page, nTop, nBottom, gTop, gBottom);
 

@@ -351,7 +351,7 @@ int main(int argc, char *argv[])
 						if (opened == 0)
 							DoMethod(app, MUIM_VPDF_CreateWindow);
 
-						while(DoMethod(app, MUIM_Application_NewInput, &sigs) != (ULONG)MUIV_Application_ReturnID_Quit)
+						while(DoMethod(app, MUIM_Application_NewInput, &sigs) != (IPTR)MUIV_Application_ReturnID_Quit)
 						{
 							if(sigs)
 							{

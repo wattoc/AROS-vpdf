@@ -88,8 +88,9 @@ struct Data
 	struct MUI_EventHandlerNode eh;
 
 };
+#define DEBUG 1
 
-#define D(x) x
+#include <aros/debug.h>
 #define gFalse 0
 #define ANNOTLIST_INVALID 0
 #define ANNOTLIST_EMPTY ((void*)-1)
@@ -238,7 +239,6 @@ DEFNEW
 							End;
 
 		outlinenum++;
-
 		if (outlinenum != 1)
 		{
 		 	set(data->grpOutline, MUIA_Group_ActivePage, xget(data->grpOutline, MUIA_Group_ChildCount) - 1);
@@ -246,7 +246,7 @@ DEFNEW
 			Child, (IPTR)outline,
 			Child, (IPTR)thumbnails,
 			End);
-			}
+		}
 		else
 		{
 			tabPageNames[0]="Thumbnails";
@@ -254,12 +254,11 @@ DEFNEW
 			RegObj = (RegisterGroup(tabPageNames),
 			Child, (IPTR)thumbnails,
 			End);
-			}
+		}
 
 		data->grpOutline = RegObj;
 
 		DoMethod(grpOutlines, OM_ADDMEMBER, RegObj);
-
 		/* attach toolbar to the document view */
 
 		set(grpToolbar, MUIA_Toolbar_DocumentView, obj);
@@ -336,27 +335,27 @@ DEFGET
 	switch (msg->opg_AttrID)
 	{
 		case MUIA_DocumentLayout_Zoom:
-			*(ULONG*)msg->opg_Storage = xget(data->layoutgroup, msg->opg_AttrID);
+			*(IPTR*)msg->opg_Storage = xget(data->layoutgroup, msg->opg_AttrID);
 			return TRUE;
 
 		case MUIA_DocumentView_PDFDocument:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->doc;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->doc;
 			return TRUE;
 
 		case MUIA_DocumentView_Page:
-			*(ULONG*)msg->opg_Storage = (ULONG)xget(data->sldPage, MUIA_Slider_Level);
+			*(IPTR*)msg->opg_Storage = (IPTR)xget(data->sldPage, MUIA_Slider_Level);
 			return TRUE;
 
 		case MUIA_DocumentView_Layout:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->layoutmode;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->layoutmode;
 			return TRUE;
 			
 		case MUIA_DocumentView_FileName:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->filename;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->filename;
 			return TRUE;
 			
 		case MUIA_DocumentView_DragAction:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->dragaction;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->dragaction;
 			return TRUE;
 	}
 
@@ -398,11 +397,12 @@ DEFMMETHOD(Cleanup)
 DEFMMETHOD(DocumentView_EnqueueRender)
 {
 	GETDATA;
-	kprintf("enqueue with high priority:%d\n", msg->page);
+	kprintf("enqueue with high priority:%d, priority:%d, layoutgrp:%p\n", msg->page, data->renderpriority, data->layoutgroup);
+	
 	DoMethod(data->renderer, MUIM_Renderer_Enqueue, msg->page, data->layoutgroup, data->renderpriority);
 	
 	// rerendered so probably annotations have to be reprocessed. optimize this pass..
-	DoMethod(_app(obj), MUIM_Application_PushMethod, obj,2, MUIM_DocumentView_UpdateAnnotations, msg->page);
+	//DoMethod(_app(obj), MUIM_Application_PushMethod, obj,2, MUIM_DocumentView_UpdateAnnotations, msg->page);
 	
 	
 	return 0;
@@ -417,9 +417,9 @@ DEFMMETHOD(DocumentView_Layout)
 	LONG page = xget(data->layoutgroup, MUIA_DocumentLayout_Page);
 	LONG pagenum;
 
-	//D(kprintf("cleanup renderer for view %p\n", data->layoutgroup));
+	D(kprintf("cleanup renderer for view %p\n", data->layoutgroup));
 	DoMethod(data->renderer, MUIM_Renderer_Remove, MUIV_Renderer_Remove_All, data->layoutgroup);
-	//D(kprintf("   ..cleanup done\n"));
+	D(kprintf("   ..cleanup done\n"));
 
 	grpDisplayChild = (Object*)DoMethod(data->grpDisplay, MUIM_Group_GetChild, MUIV_Group_GetChild_First);
 	DoMethod(data->grpDisplay, MUIM_Group_InitChange);
@@ -605,7 +605,6 @@ DEFMMETHOD(DocumentView_UpdateAnnotations)
 	
 	if (modified)
 		DoMethod(data->layoutgroup, MUIM_Group_ExitChange);
-
 	return TRUE;
 }
 

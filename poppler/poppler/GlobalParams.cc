@@ -1564,11 +1564,11 @@ GooString *GlobalParams::findSystemFontFile(GfxFont *font,
 		fontcache = setupFontCache();
 	}
 
-	kprintf("font lookup :%s:%s:%s\n", fontName->getCString(), substituteFontName != NULL ? substituteFontName->getCString() : "nosubst", base14Name != NULL ? base14Name->getCString() : "nobase14");
+	D(kprintf("font lookup :%s:%s:%s\n", fontName->getCString(), substituteFontName != NULL ? substituteFontName->getCString() : "nosubst", base14Name != NULL ? base14Name->getCString() : "nobase14"));
 
 	if ((fi = sysFonts->find(lookupName, font->isFixedWidth(), gTrue)))
 	{
-	kprintf("Found if sysFonts\n");
+	D(kprintf("Found if sysFonts\n"));
 		path = fi->path->copy();
 		*type = fi->type;
 		*fontNum = fi->fontNum;
@@ -1576,7 +1576,7 @@ GooString *GlobalParams::findSystemFontFile(GfxFont *font,
 	}
 	else
 	{
-		kprintf("Not Found if sysFonts\n");
+		D(kprintf("Not Found if sysFonts\n"));
 		char *s, *s2;
 		char *ext;
 		struct fontpattern *match;
@@ -1588,12 +1588,12 @@ GooString *GlobalParams::findSystemFontFile(GfxFont *font,
 		if (p == NULL)
 			goto fin;
 
-		kprintf("About to call fcMatch\n");
+		D(kprintf("About to call fcMatch\n"));
 
 		match = fcMatch((struct fontcache*)fontcache, p, matchingcriteria);
 		// if we have a match but it is a shitty one (no filename, no family)
 		// then pick one of the builtins
-		kprintf("Called fcMatch\n");
+		D(kprintf("Called fcMatch\n"));
 
 		
 		if (matchingcriteria[EFC_FAMILY] == FALSE && //FC_FAMILY - messed up enum vs const strings?? wtf
@@ -1609,10 +1609,10 @@ GooString *GlobalParams::findSystemFontFile(GfxFont *font,
 				fcPatternAddString(p, EFC_FAMILY, "Courier");
 			else
 				fcPatternAddString(p, EFC_FAMILY, "Times");
-			kprintf("About to call fcMatch after adding criteria\n");
+			D(kprintf("About to call fcMatch after adding criteria\n"));
 
 			match = fcMatch((struct fontcache*)fontcache, p, matchingcriteria);
-			kprintf("Called fcMatch (Again)\n");
+			D(kprintf("Called fcMatch (Again)\n"));
 		}
 		
 		if (match != NULL) /* TODO: think what to do in this case */
@@ -1621,7 +1621,7 @@ GooString *GlobalParams::findSystemFontFile(GfxFont *font,
 			s = fcPatternGetString(match, EFC_FILE, 0);
 			s2 = fcPatternGetString(match, EFC_FULLNAME, 0);
 			
-			kprintf("mached one:%s:%s\n", s, s2);
+			D(kprintf("mached one:%s:%s\n", s, s2));
 			
 			ext = strrchr(s, '.');
 			
@@ -1864,6 +1864,7 @@ GBool GlobalParams::getPSEmbedType1() {
 
 GBool GlobalParams::getPSEmbedTrueType() {
   GBool e;
+  D(kprintf("getPSEmbedTrueType\n"));
 
   lockGlobalParams;
   e = psEmbedTrueType;
@@ -1882,6 +1883,7 @@ GBool GlobalParams::getPSEmbedCIDPostScript() {
 
 GBool GlobalParams::getPSEmbedCIDTrueType() {
   GBool e;
+D(kprintf("getPSEmbedCIDTrueType\n"));
 
   lockGlobalParams;
   e = psEmbedCIDTrueType;
@@ -2285,6 +2287,7 @@ void GlobalParams::setPSEmbedType1(GBool embed) {
 }
 
 void GlobalParams::setPSEmbedTrueType(GBool embed) {
+D(kprintf("setPSEmbedTrueType\n"));
   lockGlobalParams;
   psEmbedTrueType = embed;
   unlockGlobalParams;
@@ -2297,6 +2300,7 @@ void GlobalParams::setPSEmbedCIDPostScript(GBool embed) {
 }
 
 void GlobalParams::setPSEmbedCIDTrueType(GBool embed) {
+D(kprintf("setPSEmbedCIDTrueType\n"));
   lockGlobalParams;
   psEmbedCIDTrueType = embed;
   unlockGlobalParams;

@@ -184,7 +184,7 @@ MUI_HOOK(layoutfunc, APTR grp, struct MUI_LayoutMsg *lm)
 DEFNEW
 {
 	obj = (Object *)DoSuperNew(cl,obj,
-			MUIA_Group_LayoutHook, (ULONG)&layoutfunc_hook,
+			MUIA_Group_LayoutHook, (IPTR)&layoutfunc_hook,
 			MUIA_CustomBackfill, TRUE,
 			MUIA_Group_SameSize, TRUE,
 			TAG_MORE, INITTAGS);

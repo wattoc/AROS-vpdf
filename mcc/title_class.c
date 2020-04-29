@@ -168,7 +168,7 @@ DEFGET
 	switch(msg->opg_AttrID)
 	{
 		case MUIA_VPDFTitle_IsTitle:
-			*(ULONG*)msg->opg_Storage = TRUE;
+			*(IPTR*)msg->opg_Storage = TRUE;
 			return TRUE;
 	};
 

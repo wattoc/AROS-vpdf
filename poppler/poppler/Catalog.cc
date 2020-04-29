@@ -57,9 +57,6 @@
 #include "ViewerPreferences.h"
 #include "FileSpec.h"
 
-#define DEBUG 1
-#include <aros/debug.h>
-
 #if MULTITHREADED
 #  define catalogLocker()   MutexLocker locker(&mutex)
 #else
@@ -812,7 +809,6 @@ int Catalog::getNumPages()
     obj.free();
     pagesDict.free();
   }
-	//D(kprintf("Catalog numPages %d\n", numPages));
 
   return numPages;
 }

@@ -14,9 +14,9 @@
 IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
 #endif
 
-static inline LONG xget(void *object, ULONG attr)
+static inline IPTR xget(void *object, ULONG attr)
 {
-	LONG a = 0;
+	IPTR a = 0;
 	get(object,attr,&a);
 	return a;
 }

@@ -448,7 +448,7 @@ DEFMMETHOD(VPDF_CreateWindow)
 		set(window, MUIA_Window_Open, TRUE);
 	}
 
-	return (ULONG)window;
+	return (IPTR)window;
 }
 
 DEFMMETHOD(VPDF_HandleAppMessage)
@@ -562,7 +562,7 @@ DEFMMETHOD(VPDF_RequestFile)
 						ASLFR_IntuiMsgFunc,	&AslRefreshHook,
 						ASLFR_PrivateIDCMP,	FALSE,
 						buf[ 0 ] ? ASLFR_InitialDrawer : TAG_IGNORE, buf,
-						ASLFR_InitialFile, msg->initialfile ? msg->initialfile : msg->initialpath ? (char*)FilePart(msg->initialpath) : (char*)"",
+						//ASLFR_InitialFile, msg->initialfile ? msg->initialfile : msg->initialpath ? (char*)FilePart(msg->initialpath) : (char*)"",
 						ASLFR_DrawersOnly, msg->mode & MUIV_VPDF_RequestFile_DirectoryOnly,
 						ASLFR_Window, window != 0 ? xget(window, MUIA_Window_Window) : 0,
 						TAG_DONE))
@@ -584,7 +584,7 @@ DEFMMETHOD(VPDF_RequestFile)
 		set(obj, MUIA_Application_Sleep, FALSE);
 	}
 
-	return (ULONG)res;
+	return (IPTR)res;
 
 }
 
@@ -741,7 +741,7 @@ DEFGET
 	switch (msg->opg_AttrID)
 	{
 		case MUIA_VPDF_Renderer:
-			*(ULONG*)msg->opg_Storage = (ULONG)data->renderer;
+			*(IPTR*)msg->opg_Storage = (IPTR)data->renderer;
 			return TRUE;
 	}
 
@@ -751,7 +751,7 @@ DEFGET
 	{
 		if (get(data->settings, msg->opg_AttrID, &v))
 		{
-			*(ULONG*)msg->opg_Storage = v;
+			*(IPTR*)msg->opg_Storage = v;
 			return TRUE;
 		}
 	}

@@ -469,11 +469,11 @@ GooString *GlobalParams::findSystemFontFile(GfxFont *font,
 	
 	if (fontcache == NULL)
 	{
-		kprintf("setup font cache...\n");
+		//kprintf("setup font cache...\n");
 		fontcache = setupFontCache();
 	}
 
-	kprintf("font lookup :%s:%s:%s\n", fontName->getCString(), substituteFontName != NULL ? substituteFontName->getCString() : "nosubst", base14Name != NULL ? base14Name->getCString() : "nobase14");
+	//kprintf("font lookup :%s:%s:%s\n", fontName->getCString(), substituteFontName != NULL ? substituteFontName->getCString() : "nosubst", base14Name != NULL ? base14Name->getCString() : "nobase14");
 
 	if ((fi = sysFonts->find(lookupName, font->isFixedWidth(), gTrue)))
 	{

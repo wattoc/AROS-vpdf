@@ -5,7 +5,7 @@
 
 #include "functions.h"
 #include "chunky.h"
-#include "../aros/include/init.h"
+#include "init.h"
 #include "file.h"
 
 void InitSystem(int	argc , char	*argv[]);

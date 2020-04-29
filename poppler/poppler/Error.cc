@@ -37,9 +37,6 @@
 #include "GlobalParams.h"
 #include "Error.h"
 
-#define DEBUG 1
-#include <aros/debug.h>
-
 static const char *errorCategoryNames[] = {
   "Syntax Warning",
   "Syntax Error",
@@ -88,13 +85,13 @@ void CDECL error(ErrorCategory category, Goffset pos, const char *msg, ...) {
     (*errorCbk)(errorCbkData, category, pos, sanitized->getCString());
   } else {
     if (pos >= 0) {
-      D(kprintf("%s (%lld): %s\n",
-	      errorCategoryNames[category], (long long)pos, sanitized->getCString()));
+      fprintf(stderr, "%s (%lld): %s\n",
+	      errorCategoryNames[category], (long long)pos, sanitized->getCString());
     } else {
-      D(kprintf("%s: %s\n",
-	      errorCategoryNames[category], sanitized->getCString()));
+      fprintf(stderr, "%s: %s\n",
+	      errorCategoryNames[category], sanitized->getCString());
     }
-    //fflush(stderr);
+    fflush(stderr);
   }
   delete s;
   delete sanitized;

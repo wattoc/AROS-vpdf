@@ -129,7 +129,7 @@
 #define MSG_PRINTER_AUTOROTATE_STR "Auto Rotate and Center"
 #define MSG_PRINTER_DRIVER_STR "Driver"
 #define MSG_PRINTER_PREFERENCES_STR "Printer Preferences"
-#define MSG_PRINTER_WINTITLE_STR "VPDF Â· Print Document"
+#define MSG_PRINTER_WINTITLE_STR "VPDF · Print Document"
 #define MSG_PRINTER_PRINT_STR "Print"
 #define MSG_PRINTER_CANCEL_STR "Cancel"
 #define MSG_PRINTER_OUTPUT_STR "Output:"

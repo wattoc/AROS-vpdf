@@ -62,6 +62,7 @@
 #define DEBUG 1
 #include <aros/debug.h>
 
+
 #if MULTITHREADED
 #  define pageLocker()   MutexLocker locker(&mutex)
 #else
@@ -102,6 +103,7 @@ PageAttrs::PageAttrs(PageAttrs *attrs, Dict *dict) {
   PObject obj1;
   PDFRectangle mBox;
   const GBool isPage = dict->is("Page");
+
   // get old/default values
   if (attrs) {
     mediaBox = attrs->mediaBox;
@@ -126,6 +128,7 @@ PageAttrs::PageAttrs(PageAttrs *attrs, Dict *dict) {
   if (readBox(dict, "MediaBox", &mBox)) {
     mediaBox = mBox;
   }
+
   // crop box
   if (readBox(dict, "CropBox", &cropBox)) {
     haveCropBox = gTrue;
@@ -208,6 +211,7 @@ GBool PageAttrs::readBox(Dict *dict, const char *key, PDFRectangle *box) {
   double t;
   PObject obj1, obj2;
   GBool ok;
+
   dict->lookup(key, &obj1);
   if (obj1.isArray() && obj1.arrayGetLength() == 4) {
     ok = gTrue;
@@ -529,11 +533,11 @@ Gfx *Page::createGfx(OutputDev *out, double hDPI, double vDPI,
   mediaBox = getMediaBox();
 
   if (globalParams->getPrintCommands()) {
-    D(printf("***** MediaBox = ll:%g,%g ur:%g,%g\n",
-	    mediaBox->x1, mediaBox->y1, mediaBox->x2, mediaBox->y2));
-      D(printf("***** CropBox = ll:%g,%g ur:%g,%g\n",
-	     cropBox->x1, cropBox->y1, cropBox->x2, cropBox->y2));
-    D(printf("***** Rotate = %d\n", attrs->getRotate()));
+    printf("***** MediaBox = ll:%g,%g ur:%g,%g\n",
+	    mediaBox->x1, mediaBox->y1, mediaBox->x2, mediaBox->y2);
+      printf("***** CropBox = ll:%g,%g ur:%g,%g\n",
+	     cropBox->x1, cropBox->y1, cropBox->x2, cropBox->y2);
+    printf("***** Rotate = %d\n", attrs->getRotate());
   }
 
   if (!crop) {
@@ -559,6 +563,7 @@ void Page::displaySlice(OutputDev *out, double hDPI, double vDPI,
   PObject obj;
   Annots *annotList;
   int i;
+  D(kprintf("Display Slice\n"));
   if (!out->checkPageSlice(this, hDPI, vDPI, rotate, useMediaBox, crop,
 			   sliceX, sliceY, sliceW, sliceH,
 			   printing,
@@ -571,30 +576,34 @@ void Page::displaySlice(OutputDev *out, double hDPI, double vDPI,
   if (copyXRef) {
     replaceXRef(localXRef);
   }
+  D(kprintf("Creating GFx\n"));
 
   gfx = createGfx(out, hDPI, vDPI, rotate, useMediaBox, crop,
 		  sliceX, sliceY, sliceW, sliceH,
 		  printing,
 		  abortCheckCbk, abortCheckCbkData, localXRef);
+  D(kprintf("Gfx created\n"));
 
   contents.fetch(localXRef, &obj);
-  
+  D(kprintf("Contents fetched\n"));
   if (!obj.isNull()) {
-
+    D(kprintf("Obj not null\n"));
     gfx->saveState();
-
+    D(kprintf("Saved state\n"));
     gfx->display(&obj);
-
+    D(kprintf("Displayed\n"));
     gfx->restoreState();
+    D(kprintf("Restored\n"));
   } else {
     // empty pages need to call dump to do any setup required by the
     // OutputDev
+      D(kprintf("Obj null take a dump\n"));
     out->dump();
   }
   obj.free();
   D(kprintf("annotations\n"));
-
   // draw annotations
+  /*
   annotList = getAnnots();
 
   if (annotList->getNumAnnots() > 0) {
@@ -611,8 +620,8 @@ void Page::displaySlice(OutputDev *out, double hDPI, double vDPI,
     }
     out->dump();
   }
+  */
   D(kprintf("cleanup\n"));
-
   delete gfx;
   if (copyXRef) {
     replaceXRef(doc->getXRef());

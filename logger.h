@@ -12,7 +12,7 @@
 #define	LoggerObject   NewObject( getLoggerClass() , NULL
 #endif
 
-struct MUIP_Logger_LogMessage{ULONG MethodID; ULONG severity; STRPTR message;};
+struct MUIP_Logger_LogMessage{IPTR MethodID; ULONG severity; STRPTR message;};
 
 #define MUIV_Logger_LogMessage_Message MUIV_VPDF_LogMessage_Message
 #define MUIV_Logger_LogMessage_Warning MUIV_VPDF_LogMessage_Warning

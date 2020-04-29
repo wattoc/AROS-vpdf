@@ -53,14 +53,14 @@ struct PageViewSelectionRegion
 	float y2;
 };
 
-struct MUIP_PageView_Update {ULONG MethodID; int x; int y; int width; int height;};
-struct MUIP_PageView_AddMarker {ULONG MethodID; int id; float *coords; unsigned int color;};
-struct MUIP_PageView_RemoveMarker {ULONG MethodID; unsigned int id;};
-struct MUIP_PageView_AddAnnotation {ULONG MethodID; Object *obj; float *coords;};
-struct MUIP_PageView_RemoveAnnotation {ULONG MethodID; Object *obj;};
-struct MUIP_PageView_Flush {ULONG MethodID; };
-struct MUIP_PageView_ClearSelection {ULONG MethodID; };
-struct MUIP_PageView_GetSelection {ULONG MethodID; struct PageViewSelectionRegion region;};
+struct MUIP_PageView_Update {IPTR MethodID; int x; int y; int width; int height;};
+struct MUIP_PageView_AddMarker {IPTR MethodID; int id; float *coords; unsigned int color;};
+struct MUIP_PageView_RemoveMarker {IPTR MethodID; unsigned int id;};
+struct MUIP_PageView_AddAnnotation {IPTR MethodID; Object *obj; float *coords;};
+struct MUIP_PageView_RemoveAnnotation {IPTR MethodID; Object *obj;};
+struct MUIP_PageView_Flush {IPTR MethodID; };
+struct MUIP_PageView_ClearSelection {IPTR MethodID; };
+struct MUIP_PageView_GetSelection {IPTR MethodID; struct PageViewSelectionRegion region;};
 
 
 #define MUIV_PageView_AddMarker_New -1
@@ -76,10 +76,10 @@ struct MUIP_PageView_GetSelection {ULONG MethodID; struct PageViewSelectionRegio
 
 struct PageViewRegion
 {
-	long x1;
-	long x2;
-	long y1;
-	long y2;
+	LONG x1;
+	LONG x2;
+	LONG y1;
+	LONG y2;
 };
 
 

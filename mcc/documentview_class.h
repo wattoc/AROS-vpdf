@@ -32,16 +32,16 @@
 #define	DocumentViewObject   NewObject( getDocumentViewClass() , NULL
 #endif
 
-struct MUIP_DocumentView_Render{ULONG MethodID;};
-struct MUIP_DocumentView_EnqueueRender{ULONG MethodID; LONG page;};
-struct MUIP_DocumentView_SetupPageViewImage{ULONG MethodID; APTR pageview; APTR image;};
-struct MUIP_DocumentView_Layout{ULONG MethodID; LONG layout;};
-struct MUIP_DocumentView_FindViewForPage{ULONG MethodID; LONG page;};
-struct MUIP_DocumentView_RotateRight{ULONG MethodID;};
-struct MUIP_DocumentView_RotateLeft{ULONG MethodID;};
-struct MUIP_DocumentView_ClearSelection{ULONG MethodID;};
-struct MUIP_DocumentView_UpdateAnnotations{ULONG MethodID; int page;};
-struct MUIP_DocumentView_SelectionCopy{ULONG MethodID;};
+struct MUIP_DocumentView_Render{IPTR MethodID;};
+struct MUIP_DocumentView_EnqueueRender{IPTR MethodID; LONG page;};
+struct MUIP_DocumentView_SetupPageViewImage{IPTR MethodID; APTR pageview; APTR image;};
+struct MUIP_DocumentView_Layout{IPTR MethodID; LONG layout;};
+struct MUIP_DocumentView_FindViewForPage{IPTR MethodID; LONG page;};
+struct MUIP_DocumentView_RotateRight{IPTR MethodID;};
+struct MUIP_DocumentView_RotateLeft{IPTR MethodID;};
+struct MUIP_DocumentView_ClearSelection{IPTR MethodID;};
+struct MUIP_DocumentView_UpdateAnnotations{IPTR MethodID; int page;};
+struct MUIP_DocumentView_SelectionCopy{IPTR MethodID;};
 
 #define MUIV_DocumentView_Layout_Single 0
 #define MUIV_DocumentView_Layout_ContinuousSingle 1

@@ -65,6 +65,11 @@
 #include <fofi/FoFiTrueType.h>
 #include "GfxFont.h"
 
+#ifdef __AROS__
+#define DEBUG 1
+#include <aros/debug.h>
+#endif
+
 //------------------------------------------------------------------------
 
 struct Base14FontMapEntry {
@@ -616,6 +621,8 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
   PObject refObj, embFontObj;
   int substIdx, fontNum;
   GBool embed;
+  
+  D(kprintf("locateFont called\n"));
 
   if (type == fontType3) {
     return NULL;
@@ -623,6 +630,7 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
 
   //----- embedded font
   if (embFontID.num >= 0) {
+    D(kprintf("embedded font\n"));
     embed = gTrue;
     refObj.initRef(embFontID.num, embFontID.gen);
     refObj.fetch(xref, &embFontObj);
@@ -657,6 +665,8 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
 	}
       }
       if (embed) {
+    D(kprintf("returning embedded font\n"));
+      
 	fontLoc = new GfxFontLoc();
 	fontLoc->locType = gfxFontLocEmbedded;
 	fontLoc->fontType = type;
@@ -668,6 +678,8 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
 
   //----- PS passthrough
   if (ps && !isCIDFont() && globalParams->getPSFontPassthrough()) {
+    D(kprintf("ps passthrough\n"));
+
     fontLoc = new GfxFontLoc();
     fontLoc->locType = gfxFontLocResident;
     fontLoc->fontType = fontType1;
@@ -677,6 +689,8 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
 
   //----- PS resident Base-14 font
   if (ps && !isCIDFont() && ((Gfx8BitFont *)this)->base14) {
+    D(kprintf("base14\n"));
+
     fontLoc = new GfxFontLoc();
     fontLoc->locType = gfxFontLocResident;
     fontLoc->fontType = fontType1;
@@ -686,6 +700,8 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
 
   //----- external font file (fontFile, fontDir)
   if (name && (path = globalParams->findFontFile(name))) {
+    D(kprintf("external font\n"));
+
     if ((fontLoc = getExternalFont(path, isCIDFont()))) {
       return fontLoc;
     }
@@ -693,6 +709,8 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
 
   //----- external font file for Base-14 font
   if (!ps && !isCIDFont() && ((Gfx8BitFont *)this)->base14) {
+    D(kprintf("external base14\n"));
+
     base14Name = new GooString(((Gfx8BitFont *)this)->base14->base14Name);
     if ((path = globalParams->findBase14FontFile(base14Name, this))) {
       if ((fontLoc = getExternalFont(path, gFalse))) {
@@ -706,6 +724,8 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
   //----- system font
   if ((path = globalParams->findSystemFontFile(this, &sysFontType,
 					       &fontNum))) {
+  D(kprintf("look for system font\n"));
+					       
     if (isCIDFont()) {
       if (sysFontType == sysFontTTF || sysFontType == sysFontTTC) {
 	fontLoc = new GfxFontLoc();
@@ -739,6 +759,8 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
     //----- 8-bit PS resident font
     if (name && ps) {
       if ((path = globalParams->getPSResidentFont(name))) {
+        D(kprintf("ps resident\n"));
+
 	fontLoc = new GfxFontLoc();
 	fontLoc->locType = gfxFontLocResident;
 	fontLoc->fontType = fontType1;
@@ -793,6 +815,7 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
   if (ps && ((psFont16 = globalParams->getPSResidentFont16(
 					 name,
 					 ((GfxCIDFont *)this)->getWMode())))) {
+					   D(kprintf("psresident 16\n"));
     fontLoc = new GfxFontLoc();
     fontLoc->locType = gfxFontLocResident;
     fontLoc->fontType = fontCIDType0; // this is not used
@@ -824,6 +847,7 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
       return fontLoc;
     }
   }
+  D(kprintf("failed to find substitute\n"));
 
   // failed to find a substitute font
   return NULL;
@@ -889,7 +913,7 @@ char *GfxFont::readEmbFontFile(XRef *xref, int *len) {
   char *buf;
   PObject obj1, obj2;
   Stream *str;
-
+    D(kprintf("readEmbFontFile\n"));
   obj1.initRef(embFontID.num, embFontID.gen);
   obj1.fetch(xref, &obj2);
   if (!obj2.isStream()) {

@@ -319,10 +319,10 @@ DEFGET
 		switch (attributes[id].etype)
 		{
 			case ETYPE_NUMERIC:
-				*(ULONG*)msg->opg_Storage = (ULONG)attributes[id].value;
+				*(IPTR*)msg->opg_Storage = (IPTR)attributes[id].value;
 				break;
 			case ETYPE_STRING:
-				*(ULONG*)msg->opg_Storage = (ULONG)attributes[id].svalue;
+				*(IPTR*)msg->opg_Storage = (IPTR)attributes[id].svalue;
 				break;
 		}	
 		return TRUE;

@@ -79,7 +79,6 @@
 #include "OptionalContent.h"
 
 #define DEBUG 1
-
 #include <aros/debug.h>
 
 // the MSVC math.h doesn't define this
@@ -678,9 +677,9 @@ void Gfx::display(PObject *obj, GBool topLevel) {
     error(errSyntaxError, -1, "Weird page contents");
     return;
   };
+  D(kprintf("Creating parser\n"));
 
   parser = new Parser(xref, new Lexer(xref, obj), gFalse);
-
   go(topLevel);
   delete parser;
   parser = NULL;
@@ -698,6 +697,9 @@ void Gfx::go(GBool topLevel) {
   lastAbortCheck = 0;
   numArgs = 0;
   parser->getObj(&obj);
+  
+  D(kprintf("Parser getObj\n"));
+
   while (!obj.isEOF()) {
     commandAborted = gFalse;
 
@@ -705,8 +707,6 @@ void Gfx::go(GBool topLevel) {
     if (obj.isCmd()) {
       if (printCommands) {
 	obj.print(stdout);
-
-
 	for (i = 0; i < numArgs; ++i) {
 	  printf(" ");
 	  args[i].print(stdout);
@@ -714,11 +714,11 @@ void Gfx::go(GBool topLevel) {
 	printf("\n");
 	fflush(stdout);
       }
-
       GooTimer timer;
 
       // Run the operation
       execOp(&obj, args, numArgs);
+    D(kprintf("Parser exec\n"));
 
       // Update the profile information
       if (profileCommands) {
@@ -746,6 +746,8 @@ void Gfx::go(GBool topLevel) {
 
       // periodically update display
       if (++updateLevel >= 20000) {
+          D(kprintf("Taking a dump\n"));
+
 	out->dump();
 	updateLevel = 0;
       }
@@ -809,6 +811,7 @@ void Gfx::go(GBool topLevel) {
 
   // update display
   if (topLevel && updateLevel > 0) {
+      D(kprintf("Taking a dump\n"));
     out->dump();
   }
 }
@@ -854,7 +857,6 @@ void Gfx::execOp(PObject *cmd, PObject args[], int numArgs) {
     if (!checkArg(&argPtr[i], op->tchk[i])) {
       error(errSyntaxError, getPos(), "Arg #{0:d} to '{1:s}' operator is wrong type ({2:s})",
 	    i, name, argPtr[i].getTypeName());
-
       return;
     }
   }

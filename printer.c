@@ -121,7 +121,7 @@ DEFNEW
 		Child, (IPTR) HVSpace,
 		Child, (IPTR) HGroup,
 			Child, (IPTR) HSpace(0),
-			Child, (IPTR) RawimageObject, MUIA_Rawimage_Data, (IPTR) Printer, End,
+//			Child, (IPTR) RawimageObject, MUIA_Rawimage_Data, (IPTR) Printer, End,
 
 				//MUI_NewObject("Dtpic.mui",MUIA_Dtpic_Name, "progdir:printer.png", End,
 			Child, (IPTR) HSpace(0),

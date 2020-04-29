@@ -1,8 +1,8 @@
 /*
  *   VPDF
  * 
- *   Copyright Â© 2008 Christian Rosentreter <tokai@binaryriot.org>
- *   Copyright Â© 2012 Michal Zukowski, Michal Wozniak
+ *   Copyright © 2008 Christian Rosentreter <tokai@binaryriot.org>
+ *   Copyright © 2012 Michal Zukowski, Michal Wozniak
  *   All rights reserved.
  *
  *   $Id$
@@ -18,7 +18,7 @@
 
 #include "locale.h"
 
-//extern struct Library *LocaleBase;
+extern struct Library *LocaleBase;
 static APTR           _locale_catalog;
 
 void locale_init(void)

@@ -1,8 +1,8 @@
 
 #include <exec/libraries.h>
+#include <devices/timer.h>
 #include <exec/memory.h>
 #include <proto/timer.h>
-#include <devices/timer.h>
 #include <exec/io.h>
 #include <dos/dos.h>
 #include <proto/exec.h>

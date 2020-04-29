@@ -104,12 +104,12 @@ MUI_HOOK(outline_displayfunc, LONG, struct MUI_NListtree_TreeNode *tn)
 
 		*tn->Array[ 0 ] = name != NULL ? name : "---";
 
-		if ((ULONG)*tn->Array[ -1 ] % 2)
-			*tn->Array[-9] = (STRPTR)10;
+		if ((IPTR)tn->Array[ -1 ] % 2)
+			(IPTR)tn->Array[-9] = (STRPTR)10;
 	}
 	else
 	{
-		*tn->Array[ 0 ] = "";
+		(IPTR)tn->Array[ 0 ] = "";
 	}
 
 	return (0);
@@ -118,8 +118,6 @@ MUI_HOOK(outline_displayfunc, LONG, struct MUI_NListtree_TreeNode *tn)
 
 DEFNEW
 {
-
-
 	obj = (Object *) DoSuperNew(cl, obj,
 			MUIA_NListtree_DisplayHook, (IPTR)&outline_displayhook,
 			MUIA_Frame, MUIV_Frame_InputList,
@@ -179,7 +177,7 @@ DEFGET
 			return TRUE;
 
 		case MUIA_OutlineView_IsEmpty:
-			*(ULONG*)msg->opg_Storage = data->outlineitems == NULL || ISLISTEMPTY(data->outlineitems);
+			*(IPTR*)msg->opg_Storage = data->outlineitems == NULL || ISLISTEMPTY(data->outlineitems);
 			return TRUE;
 
 	}

@@ -55,9 +55,6 @@
 #include "XRef.h"
 #include "PopplerCache.h"
 
-#define DEBUG 1
-#include <aros/debug.h>
-
 //------------------------------------------------------------------------
 // Permission bits
 // Note that the PDF spec uses 1 base (eg bit 3 is 1<<2)
@@ -534,7 +531,7 @@ GBool XRef::readXRef(Goffset *pos, std::vector<Goffset> *followedXRefStm, std::v
 	       str->makeSubStream(start + *pos, gFalse, 0, &obj)),
 	     gTrue);
   parser->getObj(&obj, gTrue);
-D(obj.print());
+
   // parse an old-style xref table
   if (obj.isCmd("xref")) {
     obj.free();

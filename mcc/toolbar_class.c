@@ -111,7 +111,7 @@ static Object *layoutbutton(char *label, UBYTE *image)
 DEFNEW
 {
 	Object *btnZoomIn, *btnZoomOut, *btnLayouts[4], *strZoom, *btnRotateLeft, *btnRotateRight, *btnOutline;
-	Object *btnZoomPopup, *btnDragMark, *btnDragScroll;
+	Object *btnZoomPopup, *btnDragMark, *btnDragScroll, *btnFitWidth, *btnFitPage;
 
 	layoutmodes[0].mode = MUIV_DocumentView_Layout_Single;
 	layoutmodes[1].mode = MUIV_DocumentView_Layout_ContinuousSingle;
@@ -129,6 +129,7 @@ DEFNEW
 				MUIA_Weight, 50,
 				//MUIA_Frame, MUIV_Frame_Text,
 				End,
+#ifndef __AROS__
 			Child, btnZoomPopup = ImageObject,
 									ButtonFrame,
 									MUIA_Image_Spec           , MUII_PopUp,
@@ -138,7 +139,12 @@ DEFNEW
 									MUIA_InputMode            , MUIV_InputMode_RelVerify,
 									MUIA_Background           , MUII_ButtonBack,
 									End,
-
+#else
+			Child, HGroup,
+				Child, btnFitWidth = SimpleButton("<->"),
+				Child, btnFitPage = SimpleButton("[]"),
+			End,
+#endif
 			Child, HGroup,
 				MUIA_Weight, 1,
 				Child, btnZoomIn = RawimageObject, 
@@ -216,7 +222,9 @@ DEFNEW
 
 		memset(data, 0, sizeof(struct Data));
 		data->strZoom = strZoom;
+#ifndef __AROS__		
 		data->btnZoomPopup = btnZoomPopup;
+#endif
 		data->btnDragMark = btnDragMark;
 		data->btnDragScroll = btnDragScroll;
 		memcpy(data->btnLayouts, btnLayouts, sizeof(btnLayouts));
@@ -235,8 +243,9 @@ DEFNEW
 
 		DoMethod(btnZoomIn, MUIM_Notify, MUIA_Pressed, FALSE, obj, 2, MUIM_Toolbar_Zoom, 10);
 		DoMethod(btnZoomOut, MUIM_Notify, MUIA_Pressed, FALSE, obj, 2, MUIM_Toolbar_Zoom, -10);
+#ifndef __AROS__
 		DoMethod(btnZoomPopup, MUIM_Notify, MUIA_Selected, FALSE, obj, 1, MUIM_Toolbar_ZoomPopup);
-		
+#endif		
 		DoMethod(btnRotateLeft, MUIM_Notify, MUIA_Pressed, FALSE, obj, 1, MUIM_DocumentView_RotateLeft);
 		DoMethod(btnRotateRight, MUIM_Notify, MUIA_Pressed, FALSE, obj, 1, MUIM_DocumentView_RotateRight);
 

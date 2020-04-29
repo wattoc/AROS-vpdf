@@ -78,9 +78,6 @@
 #include "PDFDoc.h"
 #include "Hints.h"
 
-#define DEBUG 1
-#include <aros/debug.h>
-
 #if MULTITHREADED
 #  define pdfdocLocker()   MutexLocker locker(&mutex)
 #else
@@ -299,7 +296,6 @@ GBool PDFDoc::setup(GooString *ownerPassword, GooString *userPassword) {
     }
   }
 
-	//D(kprintf("Catalog loaded\n"));
   // done
   return gTrue;
 }
@@ -1768,8 +1764,6 @@ Page *PDFDoc::parsePage(int page)
 
 Page *PDFDoc::getPage(int page)
 {
-	//D(kprintf("PDFDoc:getPage\n"));
-
   if ((page < 1) || page > getNumPages()) return NULL;
 
   if (isLinearized()) {

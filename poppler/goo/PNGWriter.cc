@@ -25,11 +25,7 @@
 #include "poppler/Error.h"
 #include "goo/gmem.h"
 
-#ifdef __AROS__
 #include <png.h>
-#else
-#include <libpng12/png.h>
-#endif
 
 struct PNGWriterPrivate {
   PNGWriter::Format format;

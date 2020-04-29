@@ -1,7 +1,7 @@
-
 /*
 	Simple memory allocation routines
 */
+
 
 #include <exec/memory.h>
 #include <proto/exec.h>

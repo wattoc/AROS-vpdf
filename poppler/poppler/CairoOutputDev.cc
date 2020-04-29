@@ -63,6 +63,11 @@
 #include "CairoFontEngine.h"
 #include "CairoRescaleBox.h"
 #include "UnicodeMap.h"
+
+#ifdef __AROS__
+#define DEBUG 1
+#include <aros/debug.h>
+#endif
 //------------------------------------------------------------------------
 
 // #define LOG_CAIRO
@@ -125,6 +130,7 @@ CairoOutputDev::CairoOutputDev() {
 
   if (!ft_lib_initialized) {
     FT_Init_FreeType(&ft_lib);
+    D(kprintf("Freetype inited\n"));
     ft_lib_initialized = gTrue;
   }
 

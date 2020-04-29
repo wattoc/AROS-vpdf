@@ -12,7 +12,7 @@
 
 #define MUIM_OutlineView_NewEntrySelected (MUIM_OutlineView_Dummy + 1)
 
-struct MUIP_OutlineView_NewEntrySelected {ULONG MethodID; APTR entry;};
+struct MUIP_OutlineView_NewEntrySelected {IPTR MethodID; APTR entry;};
 
 #if defined(__AROS__)
 #define OutlineViewObject   BOOPSIOBJMACRO_START( getOutlineViewClass() )

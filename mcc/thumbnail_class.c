@@ -467,27 +467,27 @@ DEFGET
 	switch (msg->opg_AttrID)
 	{
 		case MUIA_PageView_Width:
-			*(msg->opg_Storage) = (ULONG)(data->image ? data->image->width : 0);
+			*(msg->opg_Storage) = (IPTR)(data->image ? data->image->width : 0);
 			return TRUE;
 
 		case MUIA_PageView_Height:
-			*(msg->opg_Storage) = (ULONG)(data->image ? data->image->height : 0);
+			*(msg->opg_Storage) = (IPTR)(data->image ? data->image->height : 0);
 			return TRUE;
 
 		case MUIA_PageView_Region:
-			*(msg->opg_Storage) = (ULONG)&data->region;
+			*(msg->opg_Storage) = (IPTR)&data->region;
 			return TRUE;
 
 		case MUIA_PageView_Page:
-			*(msg->opg_Storage) = (ULONG)data->page;
+			*(msg->opg_Storage) = (IPTR)data->page;
 			return TRUE;
 
 		case MUIA_PageView_MediaWidth:
-			*(msg->opg_Storage) = (ULONG)data->mediawidth;
+			*(msg->opg_Storage) = (IPTR)data->mediawidth;
 			return TRUE;
 
 		case MUIA_PageView_MediaHeight:
-			*(msg->opg_Storage) = (ULONG)data->mediaheight;
+			*(msg->opg_Storage) = (IPTR)data->mediaheight;
 			return TRUE;
 
 		case MUIA_PageView_RedirectPage:

@@ -19,15 +19,15 @@
 #define MUIA_VPDFPrinter_PrintingMode  	       (MUIM_VPDFPrinter_Dummy + 21)
 #define MUIA_VPDFPrinter_PSMode  	           (MUIM_VPDFPrinter_Dummy + 22)
 
-struct MUIP_VPDFPrinter_PrintDocument{ULONG MethodID; APTR doc;};
-struct MUIP_VPDFPrinter_Start{ULONG MethodID;};
-struct MUIP_VPDFPrinter_Stop{ULONG MethodID;};
-struct MUIP_VPDFPrinter_Done{ULONG MethodID;};
-struct MUIP_VPDFPrinter_StatusUpdate{ULONG MethodID; ULONG page_number; ULONG actual_page;};
-struct MUIP_VPDFPrinter_Close{ULONG MethodID;};
-struct MUIP_VPDFPrinter_PrinterPrefs{ULONG MethodID;};
-struct MUIP_VPDFPrinter_HideCollate{ULONG MethodID; ULONG copies;};
-struct MUIP_VPDFPrinter_Error{ULONG MethodID;};
+struct MUIP_VPDFPrinter_PrintDocument{IPTR MethodID; APTR doc;};
+struct MUIP_VPDFPrinter_Start{IPTR MethodID;};
+struct MUIP_VPDFPrinter_Stop{IPTR MethodID;};
+struct MUIP_VPDFPrinter_Done{IPTR MethodID;};
+struct MUIP_VPDFPrinter_StatusUpdate{IPTR MethodID; ULONG page_number; ULONG actual_page;};
+struct MUIP_VPDFPrinter_Close{IPTR MethodID;};
+struct MUIP_VPDFPrinter_PrinterPrefs{IPTR MethodID;};
+struct MUIP_VPDFPrinter_HideCollate{IPTR MethodID; ULONG copies;};
+struct MUIP_VPDFPrinter_Error{IPTR MethodID;};
 
 #if defined(__AROS__)
 #define VPDFPrinterObject BOOPSIOBJMACRO_START(getVPDFPrinterClass())

@@ -15,7 +15,7 @@
 
 #define MUIM_Annotation_Toggle          ( MUIM_Annotation_Dummy + 1 )
 
-struct MUIP_Annotation_Toggle{ULONG MethodID;};
+struct MUIP_Annotation_Toggle{IPTR MethodID;};
 
 #if defined(__AROS__)
 #define AnnotationObject BOOPSIOBJMACRO_START( getAnnotationClass() )

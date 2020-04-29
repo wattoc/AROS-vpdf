@@ -40,12 +40,10 @@
 #include <proto/alib.h>
 #include <proto/dos.h>
 #include <proto/graphics.h>
-#ifndef __AROS__
 #define USE_INLINE_STDARG
 #include <proto/multimedia.h>
 #include <classes/multimedia/video.h>
 #undef USE_INLINE_STDARG
-#endif
 
 #include <utility/tagitem.h>
 #define SYSTEM_PRIVATE
@@ -289,7 +287,7 @@ static Texture *LoadDTPicture(char *fname, int chkpixfmt)
 								  DTA_GroupID, GID_PICTURE,
 								  PDTA_DestMode, PMODE_V43,
 								  PDTA_Remap, FALSE,
-								  //PDTA_Displayable, FALSE,
+								  PDTA_Displayable, FALSE,
 								  TAG_DONE);
 
 		//printf("dto:%d. freemem: %d\n", dt_object, AvailMem(MEMF_ANY));
@@ -301,7 +299,7 @@ static Texture *LoadDTPicture(char *fname, int chkpixfmt)
 								  DTA_SourceType, DTST_CLIPBOARD,
 								  PDTA_DestMode, PMODE_V43,
 								  PDTA_Remap, FALSE,
-								  //PDTA_Displayable, FALSE,
+								  PDTA_Displayable, FALSE,
 								  TAG_DONE);
 
 		if (dt_object == NULL)
@@ -322,7 +320,7 @@ static Texture *LoadDTPicture(char *fname, int chkpixfmt)
 			{PDTA_NumColors, (unsigned int) &numcols},
 			{PDTA_BitMapHeader, (unsigned int) &bmhd},
 			{PDTA_BitMap, (unsigned int) &bitmap},
-			//{PDTA_AlphaChannel, (unsigned int) &alpha},
+			{PDTA_AlphaChannel, (unsigned int) &alpha},
 			{0, 0}
 		};
 
@@ -703,7 +701,7 @@ FileInfo *fileGetInfo(char *fname, int flags)
 											  DTA_GroupID, GID_PICTURE,
 											  PDTA_DestMode, PMODE_V43,
 											  PDTA_Remap, FALSE,
-											  //PDTA_Displayable, FALSE, -not in AROS
+											  PDTA_Displayable, FALSE,
 											  TAG_DONE);
 
 					if (dt_object != NULL)

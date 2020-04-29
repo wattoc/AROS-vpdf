@@ -1,7 +1,6 @@
 
 #if defined(__AROS__)
 #define MUIMASTER_YES_INLINE_STDARG
-#include <clib/arossupport_protos.h>
 #endif
 
 /// System includes
@@ -60,9 +59,6 @@
 #include "mcc/renderer_class.h"
 #include "mcc/title_class.h"
 
-#define DEBUG 1
-#include <aros/debug.h>
-
 #define MAXRECENT 10
 
 struct Data
@@ -97,7 +93,7 @@ DEFNEW
 #endif
     TAG_DONE)),
     End,
-TAG_MORE, INITTAGS);
+    TAG_MORE, INITTAGS);
 
     if (obj != NULL)
     {
@@ -115,7 +111,7 @@ TAG_MORE, INITTAGS);
         DoMethod(obj, MUIM_VPDFWindow_CreateTab);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 DEFMMETHOD(VPDFWindow_CloseTab)
@@ -153,8 +149,7 @@ DEFMMETHOD(VPDFWindow_CreateTab)
     GETDATA;
 
     /* place empty object into tab */
-	 
-    
+
     DoMethod(data->grpRoot, MUIM_Group_InitChange);
     DoMethod(data->grpTitles, MUIM_Group_InitChange);
     DoMethod(data->grpTitles, MUIM_Group_AddTail, VPDFTitleButtonObject,
@@ -171,7 +166,7 @@ DEFMMETHOD(VPDFWindow_CreateTab)
     End);
 
     DoMethod(data->grpRoot, MUIM_Group_ExitChange);
-	DoMethod(data->grpTitles, MUIM_Group_ExitChange);
+    DoMethod(data->grpTitles, MUIM_Group_ExitChange);
 
     /* return index of new group member */
 
@@ -183,7 +178,7 @@ DEFMMETHOD(VPDFWindow_CreateTab)
 DEFMMETHOD(VPDFWindow_SaveFile)
 { 
     GETDATA;
-	int tabind = xget(data->grpRoot, MUIA_Group_ActivePage);
+    int tabind = xget(data->grpRoot, MUIA_Group_ActivePage);
     Object *group = (Object*)DoMethod(data->grpRoot, MUIM_Group_GetChild, tabind + 1); // +1 for title object
     group = (Object*)DoMethod(group, MUIM_Group_GetChild, 0);
 
@@ -258,7 +253,7 @@ DEFMMETHOD(VPDFWindow_OpenFile)
                MUIA_DocumentView_Outline, xget(_app(obj), MUIA_VPDFSettings_Outline),
                MUIA_DocumentLayout_Scaling, xget(_app(obj), MUIA_VPDFSettings_Scaling),
                End),
-		End;
+               End;
 
         if (tcontents != NULL)
             DoMethod(contents, MUIM_Group_AddTail, tcontents);
@@ -285,7 +280,7 @@ DEFMMETHOD(VPDFWindow_UpdateActive)
         if (doc != NULL)
             attr = pdfGetAttr(doc, PDFATTR_TITLE);
 
-        if (attr != NULL && attr->value.s != NULL)
+        if (attr != NULL && attr->value.s != NULL && attr->value.s[0] != '\0')
             snprintf(data->title, sizeof(data->title), "VPDF [%s]", attr->value.s);
         else if (xget(group, MUIA_DocumentView_FileName))
             snprintf(data->title, sizeof(data->title), "VPDF [%s]", FilePart((char*)xget(group, MUIA_DocumentView_FileName)));
@@ -390,7 +385,7 @@ DEFGET
     switch (msg->opg_AttrID)
     {
     case MUIA_VPDFWindow_ID:
-        *(ULONG*)msg->opg_Storage = data->id;
+        *(IPTR*)msg->opg_Storage = data->id;
         return TRUE;
 
     case MUIA_VPDFWindow_PDFDocument:
@@ -402,7 +397,7 @@ DEFGET
         if (group != NULL)
             doc = (APTR) xget(group, MUIA_DocumentView_PDFDocument);
 
-        *(ULONG*)msg->opg_Storage = (ULONG)doc;
+        *(IPTR*)msg->opg_Storage = (IPTR)doc;
         return TRUE;
     }
 
@@ -413,7 +408,7 @@ DEFGET
 
         if (group != NULL)
         {
-            *(ULONG*)msg->opg_Storage = (ULONG)group;
+            *(IPTR*)msg->opg_Storage = (IPTR)group;
             return TRUE;
         }
         break;
@@ -447,3 +442,4 @@ BEGINMTABLE2(VPDFTitleButtonClass)
 ENDMTABLE
 
 DECSUBCLASS2_NC(MUIC_Group, VPDFTitleButtonClass)
+

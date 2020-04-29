@@ -6,12 +6,11 @@
 #include "classes.h"
 
 /* interface methods and attributes */
-
 #define	MUIM_Renderer_Enqueue 				     (MUIM_DocumentLayout_Dummy + 1)
 #define	MUIM_Renderer_Remove                     (MUIM_DocumentLayout_Dummy + 2)
 
-struct MUIP_Renderer_Enqueue{ULONG MethodID; LONG pageIndex; Object *grpLayout; LONG priority;};
-struct MUIP_Renderer_Remove{ULONG MethodID; LONG pageIndex; Object *grpLayout;};
+struct MUIP_Renderer_Enqueue{IPTR MethodID; LONG pageIndex; Object *grpLayout; LONG priority;};
+struct MUIP_Renderer_Remove{IPTR MethodID; LONG pageIndex; Object *grpLayout;};
 
 #define MUIV_Renderer_Remove_All -1
 
